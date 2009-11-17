@@ -3,10 +3,10 @@
 
 roots = open('/home/boroninh/libraro/roots.txt','r').read().decode('utf-8').strip().split("\n")	
 prefixes=[u"ali",u"bo",u"dis",u"ek",u"eks",u"fi",u"ge",u"i",u"ki",u"mal",u"neni",u"pra",u"re",u"ti",u"ĉef",u"ĉi",u"ne"]
-suffixes=[u"aĵ",u"ar",u"ant",u"ad",u"at",u"aĉ",u"ant",u"an",u"ar",u"ec",u"eg",u"estr",u"et",u"ej",u"ebl",u"em",u"er",u"ent",u"el",u"ec",u"end",u"ig",u"iĝ",u"ing",u"int",u"ist",u"in",u"iĉ",u"ind",u"in",u"il",u"id",u"ism",u"it",u"int",u"obl",u"ont",u"op",u"ot",u"on",u"ont",u"uj",u"ul",u"um",u"ut",u"unt",u"ĉj"]
+suffixes=set([u"aĵ",u"ar",u"ant",u"ad",u"at",u"aĉ",u"ant",u"an",u"ar",u"ec",u"eg",u"estr",u"et",u"ej",u"ebl",u"em",u"er",u"ent",u"el",u"ec",u"end",u"ig",u"iĝ",u"ing",u"int",u"ist",u"in",u"iĉ",u"ind",u"in",u"il",u"id",u"ism",u"it",u"int",u"obl",u"ont",u"op",u"ot",u"on",u"ont",u"uj",u"ul",u"um",u"ut",u"unt",u"ĉj"])
 v_ends = ['as','is','os','us','u']
 
-morphemes = set()
+morphemes = {"pre":set(), "root":set(), "suf":set()}
 
 class Node:
 	def __init__(self, type, body, rest, parent):
@@ -23,7 +23,7 @@ class Node:
 		global morphemes
 		if self.body == "": return
 		if self.type in ["pre","root","suf"]:
-			morphemes.add((self.type,self.body))
+			morphemes[self.type].add(self.body)
 		self.parent.define()
 	def search(self):
 		# If it reached the end of the word
@@ -66,14 +66,14 @@ def starts_with(word, keys):
 	"""
 	Returns only the keys that the word starts with
 	"""
-	def f(x): return word.startswith(x)
-	return filter(f, keys)
+	return filter(lambda x: word.startswith(x), keys)
 
 def doword(word):
 	global morphemes
+	morphemes = {"pre":set(), "root":set(), "suf":set()}
 	# These roots will be ignored, because 99% of the time they
 	# are really suffixes or prefixes
-	ignore_roots = ["il","ul","mal","ek"]
+	ignore_roots = set(["il","ul","mal","ek"])
 	
 	defs = [look(word)]
 	
@@ -89,19 +89,15 @@ def doword(word):
 		defs = [look(word)]
 	
 	if defs == [None]:
-		morphemes = set() # Reset the list of morphemes
-		defs = [] # Reset the list of definitions
 		word = Node("pre","",word,None)
-		for m in morphemes:
-			s = None
-			if m[0] == "pre":
-				s = look(m[1]+"-")			
-			elif m[0] == "root" and m[1] not in ignore_roots:
-				s = look(m[1]+"o")
-			elif m[0] == "suf":
-				s = look("-"+m[1])
-			if s != None:
-				defs.append(s)
+		for m in morphemes["pre"]:
+			defs.append(look(m+"-"))
+		for m in morphemes["root"]:
+			if m not in ignore_roots:
+				defs.append(look(m+"o"))
+		for m in morphemes["suf"]:
+			defs.append(look("-"+m))
+	defs = filter(lambda x: x != None, defs)	
 	text = ""
 	if defs:
 		for d in defs:
