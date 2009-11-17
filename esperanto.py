@@ -72,8 +72,8 @@ def starts_with(word, keys):
 def doword(word):
 	global morphemes
 	# These roots will be ignored, because 99% of the time they
-	# are really suffixes
-	ignore_roots = ["il"]
+	# are really suffixes or prefixes
+	ignore_roots = ["il","ul","mal"]
 	
 	defs = [look(word)]
 	
@@ -93,6 +93,7 @@ def doword(word):
 		defs = [] # Reset the list of definitions
 		word = Node("pre","",word,None)
 		for m in morphemes:
+			s = None
 			if m[0] == "root" and m[1] not in ignore_roots:
 				s = look(m[1]+"o")
 			elif m[0] == "suf":
