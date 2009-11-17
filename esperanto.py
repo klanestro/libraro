@@ -59,6 +59,8 @@ def look(w):
 		return look(w[:-1]+"a")
 	if result == None and w.endswith('a'):
 		return look(w[:-1]+"e")
+	if result == None and w.endswith('e'):
+		return look(w[:-1]+"i")
 	if result == None: return None
 	return [w, result[0]]
 
