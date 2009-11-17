@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import sqlite3
+
 
 roots = open('/home/boroninh/libraro/roots.txt','r').read().decode('utf-8').strip().split("\n")	
 prefixes=[u"ali",u"bo",u"dis",u"ek",u"eks",u"fi",u"ge",u"i",u"ki",u"mal",u"neni",u"pra",u"re",u"ti",u"ĉef",u"ĉi"]
@@ -49,18 +49,18 @@ class Node:
 		self.children.append(Node(type,body,self.rest[len(body):],self))
 
 def look(w):
+	import sqlite3
 	conn = sqlite3.connect('/home/boroninh/libraro/words.sqlite')
 	cursor = conn.cursor()
 	cursor.execute("select * from words where eo like ?", (w,))
 	result = cursor.fetchone()
-	conn.commit()
+	conn.close()
 	if result == None and w.endswith('o'):
 		return look(w[:-1]+"a")
 	if result == None and w.endswith('a'):
 		return look(w[:-1]+"e")
 	if result == None: return None
 	return [w, result[0]]
-	conn.close()
 
 def starts_with(word, keys):
 	newkeys = []
