@@ -8,7 +8,6 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from django.template import Context, Template
 from tools import xify
-import sqlite3
 import re
 import datetime
 
