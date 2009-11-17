@@ -63,34 +63,37 @@ def look(w):
 	return [w, result[0]]
 
 def starts_with(word, keys):
-	newkeys = []
-	for key in keys:
-		if word.startswith(key):
-			newkeys.append(key)
-	return newkeys
+	"""
+	Returns only the keys that the word starts with
+	"""
+	def f(x): return word.startswith(x)
+	return filter(f, keys)
 
 def doword(word):
 	global morphemes
-	# I realize that forcing words into their simplest form
-	# isn't a good idea for a real dictionary, but here it will
-	# make life much easier, so the very few exceptions can surely
-	# be sacrificed.
-	word = word.lower()	
-	if word.endswith('n'):
-		word = word[:-1]
-	if word.endswith('j'):
-		word = word[:-1]
-	for end in ['as','is','os','us','u']:
-		if word.endswith(end):
-			word = word[:-len(end)]+"i"
+	# These roots will be ignored, because 99% of the time they
+	# are really suffixes
+	ignore_roots = ["il"]
 	
 	defs = [look(word)]
+	
 	if defs == [None]:
-		morphemes = set()
-		defs = []
+		word = word.lower()	
+		if word.endswith('n'):
+			word = word[:-1]
+		if word.endswith('j'):
+			word = word[:-1]
+		for end in ['as','is','os','us','u']:
+			if word.endswith(end):
+				word = word[:-len(end)]+"i"
+		defs = [look(word)]
+	
+	if defs == [None]:
+		morphemes = set() # Reset the list of morphemes
+		defs = [] # Reset the list of definitions
 		word = Node("pre","",word,None)
 		for m in morphemes:
-			if m[0] == "root":
+			if m[0] == "root" and m[1] not in ignore_roots:
 				s = look(m[1]+"o")
 			elif m[0] == "suf":
 				s = look("-"+m[1])
@@ -98,12 +101,13 @@ def doword(word):
 				s = look(m[1]+"-")
 			if s != None:
 				defs.append(s)
-	t = ""
-
-	for d in defs:
-		t += "<b>" + d[0] + "</b>: " + ", ".join(d[1].split("|")) + "<br/>"
-	if not defs:
-		t += "Sorry, not found."
+	text = ""
+	if defs:
+		for d in defs:
+			definition = ", ".join(d[1].split("|"))
+			text += "<b>%s</b>: %s<br/>" % (d[0], definition)
+		text = text[:-5]
 	else:
-		t = t[:-5]
-	return t
+		text = "Sorry, not found."
+
+	return text
