@@ -2,7 +2,7 @@
 
 
 roots = open('/home/boroninh/libraro/roots.txt','r').read().decode('utf-8').strip().split("\n")	
-prefixes=[u"ali",u"bo",u"dis",u"ek",u"eks",u"fi",u"ge",u"i",u"ki",u"mal",u"neni",u"pra",u"re",u"ti",u"ĉef",u"ĉi"]
+prefixes=[u"ali",u"bo",u"dis",u"ek",u"eks",u"fi",u"ge",u"i",u"ki",u"mal",u"neni",u"pra",u"re",u"ti",u"ĉef",u"ĉi",u"ne"]
 suffixes=[u"aĵ",u"ar",u"ant",u"ad",u"at",u"aĉ",u"ant",u"an",u"ar",u"ec",u"eg",u"estr",u"et",u"ej",u"ebl",u"em",u"er",u"ent",u"el",u"ec",u"end",u"ig",u"iĝ",u"ing",u"int",u"ist",u"in",u"iĉ",u"ind",u"in",u"il",u"id",u"ism",u"it",u"int",u"obl",u"ont",u"op",u"ot",u"on",u"ont",u"uj",u"ul",u"um",u"ut",u"unt",u"ĉj"]
 v_ends = ['as','is','os','us','u']
 
@@ -73,7 +73,7 @@ def doword(word):
 	global morphemes
 	# These roots will be ignored, because 99% of the time they
 	# are really suffixes or prefixes
-	ignore_roots = ["il","ul","mal"]
+	ignore_roots = ["il","ul","mal","ek"]
 	
 	defs = [look(word)]
 	
@@ -94,12 +94,12 @@ def doword(word):
 		word = Node("pre","",word,None)
 		for m in morphemes:
 			s = None
-			if m[0] == "root" and m[1] not in ignore_roots:
+			if m[0] == "pre":
+				s = look(m[1]+"-")			
+			elif m[0] == "root" and m[1] not in ignore_roots:
 				s = look(m[1]+"o")
 			elif m[0] == "suf":
 				s = look("-"+m[1])
-			elif m[0] == "pre":
-				s = look(m[1]+"-")
 			if s != None:
 				defs.append(s)
 	text = ""
