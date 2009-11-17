@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}{{ work.title.eo }}: {{ author.full }}{% endblock %}
+
+
+{% block content %}
+<div class="esperanto esp">
+{{ content|safe }}
+</div>
+
+{% if not onepage %}
+<hr/>
+<p style="text-align:center;font-size:18px;">
+{% ifnotequal prev -1 %}<a href="/read/{{ author.url }}/{{ work.url }}/{{ prev }}/">&#8592;&nbsp;</a>{% endifnotequal %}
+{{ page }}
+{% ifnotequal next -1 %}<a href="/read/{{ author.url }}/{{ work.url }}/{{ next }}/">&nbsp;&#8594;</a>{% endifnotequal %}
+</p>
+{% endif %}
+
+{% endblock %}
+
+{% block sidebar %}
+
+
+<p>&#8220;{{ work.title.en }}&#8221; written by <a href="/read/{{ author.url }}">{{ author.full }}</a>{% if work.write_year %} in {{ work.write_year }}{% endif %}.
+
+{% if work.translator %}
+Translated by <a href="/read/{{ work.translator.url }}">{{ work.translator.full }}</a>{% if work.translate_year %} in {{ work.translate_year }}{% endif %}.
+{% endif %}
+
+</p>
+{% if work.description %}
+{{ work.description|safe }}
+{% endif %}
+
+{% if work.source %}
+<p>Source: <a href="{{ work.source.url }}">{{ work.source.name }}</a></p>
+{% endif %}
+
+{% if not onepage %}
+<p>Page {{ page }} of {{ work.num_pages }}. Go to page  <input type="text" id="page_input" maxlength="3" />
+<a href="javascript:gotopage({{ work.num_pages }},'{{ work.fullurl }}')">&#8594;</a></p>
+{% endif %}
+
+<hr/>
+
+{% if license %}
+	{{ license|safe }}
+	<p><a href="/">More about licenses</a></p>
+	<hr/>
+{% endif %}
+
+{% if moreworks %}
+<h1>More by {{ work.author.full }}:</h1><ul>
+	{% for w in moreworks %}
+		<li><a href="/read/{{ author.url }}/{{ w.url }}/1">{{ w.title.eo }}</a></li>
+	{% endfor %}
+</ul>
+<hr/>
+{% endif %}
+
+{% endblock %}

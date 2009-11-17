@@ -1,0 +1,15 @@
+<p><a href="{{ work.fullurl }}">{{ work.title.eo }}</a><br/>
+<span class="small">{{ work.wtype.cap }} by 
+<a href="{{ work.author.fullurl }}">{{ work.author.full }}</a>.
+{% if work.translator %}
+
+Translated by <a href="{{ work.translator.fullurl }}">{{ work.translator.full }}</a>.
+
+{% if work.title.original %}
+Original title: &#8220;{{ work.title.original }}&#8221;.
+{% else %}{% if work.title.en %}
+English title: &#8220;{{ work.title.en }}&#8221;.
+{% endif %}{% endif %}
+
+{% endif %}
+</span></p>

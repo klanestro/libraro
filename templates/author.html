@@ -1,0 +1,47 @@
+{% regroup person.works.all by wtype.plural_cap as type_list %}
+
+{% if person.works.all %}
+	{% for type in type_list %}
+	<h2>{{ type.grouper }}:</h2>
+		{% for work in type.list %}
+		{% if work.published %}
+			<p class="read_link">
+				<a href="{{ work.fullurl }}">{{ work.title.eo }}</a>
+			<br/>
+			{% if work.translator %}
+				<span class="small">
+				{% ifequal work.translator work.author %}
+					Written in {{ work.lang }} and translated by {{ author.him_her }}self. 
+				{% else %}
+					Translated 
+					{% if work.original_language %}from {{ work.lang }} {% endif %}
+					by <a href="{{ work.translator.fullurl }}">{{ work.translator.full }}</a>. 
+				{% endifequal %}
+				{% if work.title.original %}
+					Original title: &#8220;{{ work.title.original }}&#8221;.
+				{% else %}
+					{% if work.title.en %}
+						English title: &#8220;{{ work.title.en }}&#8221;.
+					{% endif %}
+				{% endif %}
+				</span>
+			{% endif %}
+			</p>
+		{% endif %}	
+		{% endfor %}
+	{% endfor %}
+{% endif %}
+
+{% if person.translations.all %}
+	<h2>Translations:</h2>
+	{% for work in person.translations.all %}
+	{% if work.published %}
+		<p class="read_link">
+		<a href="{{ work.fullurl }}">{{ work.title.eo }}</a>
+		<br/>
+		<span class="small">By <a href="{{ work.author.fullurl }}">{{ work.author.full }}</a>. 
+		{% if work.title.original %}Original {{ work.lang }} title: &#8220;{{ work.title.original }}&#8221;.{% endif %}
+		</span></p>
+	{% endif %}
+	{% endfor %}
+{% endif %}
