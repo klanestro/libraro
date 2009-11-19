@@ -6,11 +6,11 @@ body{
 	font-family: Arial, Helvetica, Sans;
 	color:#373737;
 	margin:0px;
-	background-color:#1D0006;
+	background-color:#C4E785;
 	height:100%;
 }
 #page_input{
-	background-color:#1D0006;
+	background-color:none;
 	color:#AFAFAF;
 	border:none;
 	border-bottom:1px dotted #AFAFAF;
@@ -45,16 +45,13 @@ img{
 }
 #created_by{
 	margin-top:5px;
-	color:#959595;
 	font-size:12px;
-	padding:5px;
+	padding-left:5px;
 }
 
 #side_bar{
 	float:right;
-	background-color:#1D0006;
 	width:335px;
-	color:#AFAFAF;
 	font-size:13px;
 	line-height:17px;
 }
@@ -81,7 +78,7 @@ img{
 
 #side_bar hr{
 	height:1px;
-	background-color:#AFAFAF;
+	background-color:#373737;
 	border:none;
 }
 
@@ -99,7 +96,6 @@ img{
 
 #clearall{
 	height:5px;
-	background-color:#1D0006;
 	clear:both;
 	z-index:2;
 }
@@ -223,25 +219,21 @@ a:hover{
 #menu_bar{
 	margin-top:90px;
 	position:relative;
-	height:25px;
+	height:45px;
 }
 div.menu_item{
-	font-family:Garamond, Georgia, Sans, FreeSans, Verdana, Arial;
-	/*color:#cccccc;*/
+	font-family:Helvetica, Arial, Sans;
 	float:left;
-	position:relative;
-	font-size:18px;
+	/*position:relative;*/
+	font-size:16px;
 	padding-right:7px;
 	padding-left:7px;
-	height:25px;
+	padding-top:4px;
 	font-weight:100;
 }
-div.menu_item > a{
-	color:#8BCFE2
-}
 div.menu_item_active > a{
-	text-decoration:none;
-	color:white;
+	text-decoration:underline;
+	color:white/*#373737*/;
 }
 div.menu_item_active > a:hover{
 	text-decoration:none;
@@ -269,13 +261,16 @@ span.small > a{
 	width:545px;
 	left:50%;
 	margin-left:-450px;
-	background-color:white;
-	/*border-top:1px solid white;*/
+	background-color:#ECFFC8;
 	z-index:1;
 }
 #vortaro-title{
-	background-color:black;
+	background-color:#373737;
+	padding-left:3px;
 	color:white;
 	font-size:10px;
 	height:16px;
+}
+#vortaro-definition{
+	padding-left:3px;
 }
