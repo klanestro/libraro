@@ -76,6 +76,10 @@ def doword(word):
 	# are really suffixes or prefixes
 	ignore_roots = set(["il","ul","mal","ek","ind"])
 	
+	# Poetic omission of the ending
+	if word.endswith("'"):
+		word = word[:-1]+"o"
+	
 	defs = [look(word)]
 	
 	if defs == [None]:
@@ -91,14 +95,17 @@ def doword(word):
 	
 	if defs == [None]:
 		word = Node("pre","",word,None)
+		for m in morphemes["suf"]:
+			defs.append(look("-"+m))
+			# Remove all roots that are same as suffixes
+			if m in morphemes["root"]:
+				morphemes["root"].remove(m)	
 		for m in morphemes["pre"]:
 			defs.append(look(m+"-"))
 		for m in morphemes["root"]:
-			if m not in ignore_roots:
-				defs.append(look(m+"o"))
-		for m in morphemes["suf"]:
-			defs.append(look("-"+m))
-	defs = filter(lambda x: x != None, defs)	
+			defs.append(look(m+"o"))
+
+	defs = filter(lambda x: x != None, defs)
 	text = ""
 	if defs:
 		for d in defs:
