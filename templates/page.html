@@ -4,15 +4,8 @@
 
 
 {% block content %}
-<div class="esp">
-<div class="esperanto">
+<div class="esperanto esp">
 {{ content|safe }}
-
-</div>
-<div id="vortaro">
-	<div id="vortaro-title">Double-click any word for instant translation<img src="/media/load.gif" style="float:right;visibility:hidden" id="load"/></div>
-	<div id="vortaro-definition"></div>
-</div>
 </div>
 
 {% if not onepage %}

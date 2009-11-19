@@ -5,7 +5,7 @@
 		<title>{% block title %}{{ title }}{% endblock %} - Libraro</title>
 		<link rel="stylesheet" type="text/css" href="/media/style.css" />
 		<link rel="icon" type="image/png" href="/media/favicon.png" />
-		<script type="text/javascript" src="/media/jquery.js"></script>
+		<script type="text/javascript" src="/media/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="/media/main.js"></script>
 		{% block includes %}{% endblock %}
 	</head>
@@ -64,12 +64,6 @@
 			</div>
 			<div id="clearall"></div>
 		</div>
-		<!--
-		<div id="vortaro">
-		<div id="vortaro-title">Double-click any word for instant translation<img src="/media/load.gif" style="float:right;visibility:hidden" id="load"/></div>
-		<div id="vortaro-definition"></div>
-		</div>
-		-->
 	<script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -79,5 +73,9 @@ try {
 var pageTracker = _gat._getTracker("UA-11052697-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
+	<div id="vortaro">
+		<div id="vortaro-title">Double-click any word for instant translation<img src="/media/load.gif" style="float:right;visibility:hidden" id="load"/></div>
+		<div id="vortaro-definition"></div>
+	</div>
 	</body>
 </html>
