@@ -103,7 +103,6 @@ img{
 
 h1, h2, h3, h4, h5, h6, h7{
 	text-align:left;
-	/*font-variant:small-caps;*/
 	padding-top:20px;
 	padding-left:10px;
 }
@@ -224,7 +223,6 @@ a:hover{
 div.menu_item{
 	font-family:Helvetica, Arial, Sans;
 	float:left;
-	/*position:relative;*/
 	font-size:16px;
 	padding-right:7px;
 	padding-left:7px;
@@ -233,7 +231,7 @@ div.menu_item{
 }
 div.menu_item_active > a{
 	text-decoration:underline;
-	color:white/*#373737*/;
+	color:white;
 }
 div.menu_item_active > a:hover{
 	text-decoration:none;
