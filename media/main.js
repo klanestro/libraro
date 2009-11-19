@@ -1,14 +1,14 @@
 function gotopage(pages, url){
-	s = document.getElementById('page_input').value;
+	s = $('#page_input').val();
 	try{
 		n = eval(s); // Is a number
 		if(n <= pages){
-			window.location = url + n		
+			window.location = url + n;	
 		}else{
 			bdsadasd(); // Raise error if number too big
 		}
 	}catch(err){
-		document.getElementById('page_input').value = "";
+		$('#page_input').val("");
 		return;
 	}
 }
