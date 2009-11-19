@@ -5,6 +5,12 @@ from xml.etree import ElementTree
 import sys
 from xml.dom import pulldom
 
+def wrap_words(text):
+	prog = re.compile(r"([^<>\w])([\w']+)([^<>\w])", re.UNICODE)
+	def foo(m):
+		return "%s<v>%s</v>%s" % (m.group(1), m.group(2), m.group(3))
+	return prog.sub(foo, " "+text+" ")
+
 def urlify(text):
 	url = re.compile(r'[^ \ \w]', re.UNICODE).sub('',text.lower())
 	return re.sub(r'\ ','_',url)#.decode('utf-8')
@@ -18,7 +24,7 @@ def xify(text):
 	return text
 
 class Page_Splitter:
-	version = 24
+	version = 36
 	pagesize = 2000
 	untouched_tags = ['p','em']
 	nobr_elements = ['p','stanza','center','footnote','h2']
@@ -43,7 +49,7 @@ class Page_Splitter:
 				text += '<blockquote class="verse">'
 			
 			if event == 'CHARACTERS':
-				text += node.data
+				text += wrap_words(wrap_words(node.data))
 				
 			elif event == 'START_ELEMENT':
 				
@@ -122,7 +128,7 @@ class Page_Splitter:
 			table += "</table>"
 			self.pages[0] = table + self.pages[0]
 		# Make a title for the first page
-		self.pages[0] = "<h1>" + work.title()['eo'] + "</h1>" + self.pages[0]
+		self.pages[0] = "<h1>" + wrap_words(work.title()['eo']) + "</h1>" + self.pages[0]
 		
 	def endpage(self):
 		# Are we in the middle of a poem?

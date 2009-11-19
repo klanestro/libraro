@@ -10,7 +10,6 @@ body{
 	height:100%;
 }
 #page_input{
-	background-color:none;
 	color:#AFAFAF;
 	border:none;
 	border-bottom:1px dotted #AFAFAF;
@@ -271,4 +270,7 @@ span.small > a{
 }
 #vortaro-definition{
 	padding-left:3px;
+}
+v{
+	cursor: help;
 }

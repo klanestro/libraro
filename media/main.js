@@ -15,14 +15,11 @@ function gotopage(pages, url){
 
 var vortaro = function(){};
 vortaro.findword = function(){
-	var word;
-	if(window.getSelection){ // Real browsers
-		word = window.getSelection();
-	}else{ // Internet Explorer
-		word = document.selection.createRange().text;
+	if(vortaro.word == ""){
+		return;
 	}
 	$("#load").css("visibility", "visible");
-	$.get('/dictionary/'+word, function(data){
+	$.get('/dictionary/',{"word":vortaro.word}, function(data){
 		$("#load").css("visibility", "hidden");		
 		$("#vortaro-definition").html(data);
 	});
@@ -36,9 +33,10 @@ vortaro.close = function(){
 }
 vortaro.timeout = setTimeout("",1);
 vortaro.ready = false;
+vortaro.word = "";
 vortaro.register = function(el){
 	el = $(el);
-	el.dblclick(vortaro.findword);
+	el.click(vortaro.findword);
 	el.mouseenter(function(){
 		clearTimeout(vortaro.timeout);
 		$("#vortaro").stop().animate({bottom:"0px"},"fast");
@@ -51,6 +49,14 @@ vortaro.register = function(el){
 		$("#vortaro").mouseleave(vortaro.close);
 		vortaro.ready = true;
 	}
+	$("v").mouseenter(function(){
+		vortaro.word = $(this).html();
+		$(this).css("background-color","#FFFD9E");
+	});
+	$("v").mouseleave(function(){
+		vortaro.word = ""
+		$(this).css("background-color","white");
+	});
 }
 
 $(document).ready(function(){vortaro.register(".esp");})

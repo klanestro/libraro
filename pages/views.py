@@ -14,6 +14,9 @@ import datetime
 def lookup(request, word):
 	return HttpResponse(doword(word))
 
+def lookup2(request):
+	return HttpResponse(doword(request.GET["word"]))
+
 def contribute(request):
 	return render_to_response("contribute.html", {"active_tab":"contribute","additions": latest()})
 
