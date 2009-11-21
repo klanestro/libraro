@@ -168,24 +168,23 @@ def starts_with(word, keys):
 def doword(word):
 	global defs
 	
+	word = word.decode('utf-8')
 	# Poetic omission of the ending
 	if word.endswith("'"):
 		word = word[:-1]+"o"
 	
-	defs = [look(word)]
+	word = word.lower()	
+	if word.endswith('n'):
+		word = word[:-1]
+	if word.endswith('j'):
+		word = word[:-1]
+	for end in ['as','is','os','us','u']:
+		if word.endswith(end):
+			word = word[:-len(end)]+"i"
 	
-	if defs == [None]:
-		word = word.lower()	
-		if word.endswith('n'):
-			word = word[:-1]
-		if word.endswith('j'):
-			word = word[:-1]
-		for end in ['as','is','os','us','u']:
-			if word.endswith(end):
-				word = word[:-len(end)]+"i"
-		defs = [look(word)]
-
-	if defs == [None]:
+	findword("root",word[:-1],(word[-1],"o","a","e","i"))
+	
+	if not defs:
 		defs = []
 		word = Node("pre","",word)
 		for d in dead_ends:
@@ -205,4 +204,4 @@ def doword(word):
 
 verbose = False
 if verbose:
-	print doword("bridrimenis")
+	print doword("aŭtomobilis")
