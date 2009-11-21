@@ -5,16 +5,12 @@ import datetime
 
 from libraro.settings import MEDIA_ROOT as media
 from libraro.pages.models import *
-from libraro.esperanto import doword
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.files import File
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.template import Context, Template
 from tools import xify
-
-def lookup(request):
-	return HttpResponse(doword(request.GET["word"].encode('utf-8')))
 
 def contribute(request):
 	return render_to_response("contribute.html", {"active_tab":"contribute","additions": latest()})

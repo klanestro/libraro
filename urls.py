@@ -14,7 +14,6 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
 	(r'^$', 'libraro.pages.views.home'),
-	(r'^dictionary/$', 'libraro.pages.views.lookup'),
 	(r'^read/$', 'libraro.pages.views.list_recent'),
 	(r'^read/authors$', 'libraro.pages.views.list_authors'),
 	(r'^contribute/$', 'libraro.pages.views.contribute'),
