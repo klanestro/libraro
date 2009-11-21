@@ -19,10 +19,10 @@ vortaro.findword = function(){
 		return;
 	}
 	$("#load").css("visibility", "visible");
-	rand = Math.floor(Math.random()*1000001)
-	$.get('/dictionary/',{"word":vortaro.word,"random":rand}, function(data){
+	//rand = Math.floor(Math.random()*1000001)
+	$.getJSON('http://vortaro.co.cc/ajax/epo/eng/'+vortaro.word+'/?callback=?', function(data){
 		$("#load").css("visibility", "hidden");		
-		$("#vortaro-definition").html(data);
+		$("#vortaro-definition").html(data.text);
 	});
 }
 vortaro.close = function(){
