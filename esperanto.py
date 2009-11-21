@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from settings import ROOT_FOLDER
+from libraro.settings import ROOT_FOLDER
 
 roots = set(open(ROOT_FOLDER+'roots.txt','r').read().decode('utf-8').strip().split("\n"))
 prefixes=[u"ali",u"bo",u"dis",u"ek",u"eks",u"fi",u"ge",u"i",u"ki",u"mal",u"neni",u"pra",u"re",u"ti",u"ĉef",u"ĉi",u"ne"]
