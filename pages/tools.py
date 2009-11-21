@@ -9,7 +9,7 @@ def wrap_words(text):
 	prog = re.compile(r"([^<>\w])([\w']+)([^<>\w])", re.UNICODE)
 	def foo(m):
 		return "%s<v>%s</v>%s" % (m.group(1), m.group(2), m.group(3))
-	return prog.sub(foo, prog.sub(foo, " "+text+" "))
+	return prog.sub(foo, prog.sub(foo, " "+text+" "))[1:-1]
 
 def urlify(text):
 	url = re.compile(r'[^ \ \w]', re.UNICODE).sub('',text.lower())
@@ -24,7 +24,7 @@ def xify(text):
 	return text
 
 class Page_Splitter:
-	version = 53
+	version = 62
 	pagesize = 3500
 	untouched_tags = ['p','em']
 	nobr_elements = ['p','stanza','center','footnote','h2']
@@ -125,7 +125,7 @@ class Page_Splitter:
 			self.endpage()
 			
 		self.num_pages = len(self.pages)
-		if contents and not self.onepage:
+		if contents and not self.onepage and self.num_pages >= 3:
 		# Make a table of contents
 			table = '<table class="contents">'
 			for c in contents:
