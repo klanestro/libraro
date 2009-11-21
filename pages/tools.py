@@ -24,10 +24,10 @@ def xify(text):
 	return text
 
 class Page_Splitter:
-	version = 75
+	version = 76
 	pagesize = 3500
 	untouched_tags = ['p','em']
-	nobr_elements = ['p','stanza','center','footnote','h2']
+	nobr_elements = ['p','stanza','center','footnote','h2','c1','c2']
 	
 	def __init__(self, work):
 		self.work = work
@@ -81,6 +81,10 @@ class Page_Splitter:
 					_h2 = True
 					contents.append([len(self.pages)+1,""])
 					text += "<h2>"
+				elif node.nodeName == "c1":
+					text += "<h2>"
+				elif node.nodeName == "c2":
+					text += "<h3>"
 				elif node.nodeName == "img":
 					events.expandNode(node)
 					url = work.dir() + "/img/" + node.getAttribute("name")
@@ -110,6 +114,10 @@ class Page_Splitter:
 				elif node.nodeName == "h2":
 					_h2 = False
 					text += "</h2>"
+				elif node.nodeName == "c1":
+					text += "</h2>"
+				elif node.nodeName == "c2":
+					text += "</h3>"
 					
 				if node.nodeName in Page_Splitter.untouched_tags:
 					text += '</%s>' % node.nodeName 
