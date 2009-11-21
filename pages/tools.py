@@ -24,7 +24,7 @@ def xify(text):
 	return text
 
 class Page_Splitter:
-	version = 62
+	version = 63
 	pagesize = 3500
 	untouched_tags = ['p','em']
 	nobr_elements = ['p','stanza','center','footnote','h2']
