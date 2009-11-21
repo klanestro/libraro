@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import sys
 
 roots = set(open('/home/boroninh/libraro/roots.txt','r').read().decode('utf-8').strip().split("\n"))
 prefixes=[u"ali",u"bo",u"dis",u"ek",u"eks",u"fi",u"ge",u"i",u"ki",u"mal",u"neni",u"pra",u"re",u"ti",u"ĉef",u"ĉi",u"ne"]
 suffixes=set([u"aĵ",u"ar",u"ant",u"ad",u"at",u"aĉ",u"ant",u"an",u"ar",u"ec",u"eg",u"estr",u"et",u"ej",u"ebl",u"em",u"er",u"ent",u"el",u"end",u"ig",u"iĝ",u"ing",u"int",u"ist",u"in",u"iĉ",u"ind",u"il",u"id",u"ism",u"it",u"int",u"obl",u"op",u"ot",u"on",u"ont",u"uj",u"ul",u"um",u"ut",u"unt",u"ĉj"])
 
+verbose = False
 morphemes = {"root":[],"suf":[],"pre":[]}
 defs = []
 dead_ends = []
@@ -201,6 +203,7 @@ def doword(word):
 
 	return text
 
-verbose = False
-if verbose:
-	print doword("komplikaĵon")
+
+if __name__ == "__main__":
+	verbose = True
+	print doword(sys.argv[1])
