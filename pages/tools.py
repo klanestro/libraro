@@ -129,7 +129,7 @@ class Page_Splitter:
 			if not _nobr and not self.onepage and len(self.curpage) >= Page_Splitter.pagesize:
 				self.endpage()
 		
-		if self.curpage:
+		if self.curpage.strip():
 			self.endpage()
 			
 		self.num_pages = len(self.pages)
