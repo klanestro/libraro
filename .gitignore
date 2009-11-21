@@ -1,3 +1,5 @@
 *~
 *.pyc
 local_settings.py
+esp.sqlite3
+media/works
