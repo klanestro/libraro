@@ -7823,4 +7823,5 @@ zum
 ŝveb
 ŝvel
 ŝvit
-ŝŝ
+instru
+komplik
