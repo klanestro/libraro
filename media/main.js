@@ -19,7 +19,8 @@ vortaro.findword = function(){
 		return;
 	}
 	$("#load").css("visibility", "visible");
-	$.get('/dictionary/',{"word":vortaro.word}, function(data){
+	rand = Math.floor(Math.random()*1000001)
+	$.get('/dictionary/',{"word":vortaro.word,"random":rand}, function(data){
 		$("#load").css("visibility", "hidden");		
 		$("#vortaro-definition").html(data);
 	});
