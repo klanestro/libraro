@@ -201,6 +201,6 @@ def doword(word):
 
 	return text
 
-verbose = True
+verbose = False
 if verbose:
 	print doword("komplikaĵon")
