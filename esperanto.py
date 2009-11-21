@@ -167,8 +167,8 @@ def starts_with(word, keys):
 
 def doword(word):
 	global defs
-	
-	word = word.decode('utf-8')
+	word = word.decode('utf-8')	
+	defs = []
 	# Poetic omission of the ending
 	if word.endswith("'"):
 		word = word[:-1]+"o"
@@ -185,11 +185,10 @@ def doword(word):
 	findword("root",word[:-1],(word[-1],"o","a","e","i"))
 	
 	if not defs:
-		defs = []
-		word = Node("pre","",word)
+		w = Node("pre","",word)
 		for d in dead_ends:
 			d.dead_end()
-		word.gather()
+		w.gather()
 
 	text = ""
 	if defs:
@@ -202,6 +201,6 @@ def doword(word):
 
 	return text
 
-verbose = False
+verbose = True
 if verbose:
-	print doword("aŭtomobilis")
+	print doword("komplikaĵon")

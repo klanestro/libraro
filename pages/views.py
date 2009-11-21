@@ -11,11 +11,8 @@ from tools import xify
 import re
 import datetime
 
-def lookup(request, word):
-	return HttpResponse(doword(word))
-
-def lookup2(request):
-	return HttpResponse(doword(request.GET["word"]))
+def lookup(request):
+	return HttpResponse(doword(request.GET["word"].encode('utf-8')))
 
 def contribute(request):
 	return render_to_response("contribute.html", {"active_tab":"contribute","additions": latest()})
@@ -64,6 +61,13 @@ def xmlpage(request, author, title):
 	work = get_object_or_404(Work, url=title)
 	response = HttpResponse(work.text("xml"), mimetype='application/xml')
 	response['Content-Disposition'] = 'attachment; filename='+xify(work.url)+'.xml'
+	return response
+
+def htmlpage(request, author, title):
+	work = get_object_or_404(Work, url=title)
+	return render_to_response("htmlpage.html", {"content":work.text("html")})
+	response = HttpResponse(work.text("html"), mimetype='application/xml')
+	response['Content-Disposition'] = 'attachment; filename='+xify(work.url)+'.html'
 	return response
 
 def page(request, author, title, page=1):
