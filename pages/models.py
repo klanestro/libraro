@@ -51,7 +51,7 @@ class Person(Model):
 	born = IntegerField(blank=True, null=True)
 	died = IntegerField(blank=True, null=True)
 	def fullurl(self):
-		return "/read/" + self.url + "/"
+		return "/read/" + self.url
 	def sex(self, m, f):
 		if self.gender == "M": return m
 		else: return f
@@ -90,22 +90,16 @@ class Work(Model):
 	url = CharField(max_length=60, editable=False)
 	num_pages = IntegerField(editable=False, null=True)
 	when_published = DateTimeField(editable=False, null=True)
-	splitter_version = IntegerField(editable=False, null=True)
+	splitter_version = IntegerField(editable=False, null=True, default=0)
+	
 	def fullurl(self):
-		return "/read/" + self.author.url + "/" + self.url + "/"
+		return "/read/" + self.author.url + "/" + self.url
 	
 	def page(self,number):
-		if self.num_pages == 0 or self.num_pages == None:
-			self.to_html()
+		self.generate()
 		if number > self.num_pages:
 			raise Http404
-		try:
-			p = self.pages.all().get(number=number)
-		except:
-			self.to_html()
 		p = self.pages.all().get(number=number)
-		if self.splitter_version < Page_Splitter.version:
-			self.to_html()
 		return p.content
 
 	def lang(self):
@@ -142,18 +136,29 @@ class Work(Model):
 		return '<a href="#">Link to first page</a>'
 	link.allow_tags = True
 	
-	def to_html(self):
+	def generate(self):
+		# No need to generate
+		if self.splitter_version == Page_Splitter.version:
+			return
 		# Delete all old pages
 		self.pages.all().delete()
 
 		splitter = Page_Splitter(self)
+		splitter.run()
+		
 		self.num_pages = splitter.num_pages
 		self.splitter_version = Page_Splitter.version
-		#self.rawsave()
+
 		super(Work, self).save(False, False)
 		
 		for num, page in splitter:
 			Page(number=num+1, content=page, work=self).save()
+		
+		# Make new work.html
+		new = open((media+"works/%d/work.html" % self.id), 'w')
+		splitter.run(onepage=True,wrapwords=False)
+		new.write(splitter.pages[0].encode('utf-8'))
+		new.close()
 		
 	def save(self, force_insert=False, force_update=False):	
 		title = self.title()['eo']
@@ -179,12 +184,15 @@ class Work(Model):
 			xml.write(self.fulltext.encode('utf-8'))
 			xml.close()
 			self.fulltext = ""
-			self.to_html()
+			self.generate()
 	
 	def text(self, format, as_file=False):
 		workdir = media+"works/%d/" % self.id
 		if format == "xml":
 			f = "work.xml"
+		elif format == "html":
+			self.generate()
+			f = "work.html"
 		if as_file:
 			return open(workdir + f, 'r')
 		else:

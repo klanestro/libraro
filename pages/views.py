@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import re
+import datetime
+
+from libraro.settings import MEDIA_ROOT as media
 from libraro.pages.models import *
 from libraro.esperanto import doword
 from django.shortcuts import render_to_response, get_object_or_404
@@ -8,8 +12,6 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from django.template import Context, Template
 from tools import xify
-import re
-import datetime
 
 def lookup(request):
 	return HttpResponse(doword(request.GET["word"].encode('utf-8')))
@@ -65,10 +67,11 @@ def xmlpage(request, author, title):
 
 def htmlpage(request, author, title):
 	work = get_object_or_404(Work, url=title)
-	return render_to_response("htmlpage.html", {"content":work.text("html")})
-	response = HttpResponse(work.text("html"), mimetype='application/xml')
-	response['Content-Disposition'] = 'attachment; filename='+xify(work.url)+'.html'
-	return response
+	return render_to_response("htmlpage.html", {
+	"content":work.text("html"),
+	"work":work,
+	"style":open(media+"page.css").read(),
+	})
 
 def page(request, author, title, page=1):
 	page = int(page)

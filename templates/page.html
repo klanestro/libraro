@@ -2,7 +2,8 @@
 
 {% block title %}{{ work.title.eo }}: {{ author.full }}{% endblock %}
 
-{% block includes %}<script src="/media/jquery.base64.js" type="text/javascript"></script>{% endblock %}
+{% block includes %}<script src="/media/jquery.base64.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/media/page.css" />{% endblock %}
 
 {% block content %}
 <div class="esperanto esp">
@@ -12,9 +13,9 @@
 {% if not onepage %}
 <hr/>
 <p style="text-align:center;font-size:18px;">
-{% ifnotequal prev -1 %}<a href="/read/{{ author.url }}/{{ work.url }}/{{ prev }}/">&#8592;&nbsp;</a>{% endifnotequal %}
+{% ifnotequal prev -1 %}<a href="{{ work.fullurl }}/{{ prev }}/">&#8592;&nbsp;</a>{% endifnotequal %}
 {{ page }}
-{% ifnotequal next -1 %}<a href="/read/{{ author.url }}/{{ work.url }}/{{ next }}/">&nbsp;&#8594;</a>{% endifnotequal %}
+{% ifnotequal next -1 %}<a href="{{ work.fullurl }}/{{ next }}/">&nbsp;&#8594;</a>{% endifnotequal %}
 </p>
 {% endif %}
 
@@ -23,10 +24,10 @@
 {% block sidebar %}
 
 
-<p>&#8220;{{ work.title.en }}&#8221; written by <a href="/read/{{ author.url }}">{{ author.full }}</a>{% if work.write_year %} in {{ work.write_year }}{% endif %}.
+<p>&#8220;{{ work.title.en }}&#8221; written by <a href="{{ author.fullurl }}">{{ author.full }}</a>{% if work.write_year %} in {{ work.write_year }}{% endif %}.
 
 {% if work.translator %}
-Translated by <a href="/read/{{ work.translator.url }}">{{ work.translator.full }}</a>{% if work.translate_year %} in {{ work.translate_year }}{% endif %}.
+Translated by <a href="{{ work.translator.fullurl }}">{{ work.translator.full }}</a>{% if work.translate_year %} in {{ work.translate_year }}{% endif %}.
 {% endif %}
 
 </p>
@@ -43,6 +44,7 @@ Translated by <a href="/read/{{ work.translator.url }}">{{ work.translator.full 
 <a href="javascript:gotopage({{ work.num_pages }},'{{ work.fullurl }}')">&#8594;</a></p>
 {% endif %}
 
+<p><a href="{{ work.fullurl }}.html">Print version</a></p>
 <hr/>
 
 {% if license %}
@@ -54,7 +56,7 @@ Translated by <a href="/read/{{ work.translator.url }}">{{ work.translator.full 
 {% if moreworks %}
 <h1>More by {{ work.author.full }}:</h1><ul>
 	{% for w in moreworks %}
-		<li><a href="/read/{{ author.url }}/{{ w.url }}/1">{{ w.title.eo }}</a></li>
+		<li><a href="{{ w.fullurl }}">{{ w.title.eo }}</a></li>
 	{% endfor %}
 </ul>
 <hr/>

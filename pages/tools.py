@@ -24,11 +24,18 @@ def xify(text):
 	return text
 
 class Page_Splitter:
-	version = 40
+	version = 53
 	pagesize = 3500
 	untouched_tags = ['p','em']
 	nobr_elements = ['p','stanza','center','footnote','h2']
+	
 	def __init__(self, work):
+		self.work = work
+		
+	def run(self, onepage=False, wrapwords=True):
+		work = self.work
+		self.wrapwords = wrapwords
+		self.onepage = onepage
 		input = work.text("xml",True)
 		events = pulldom.parse(input)
 		self.pages = []
@@ -49,7 +56,7 @@ class Page_Splitter:
 				text += '<blockquote class="verse">'
 			
 			if event == 'CHARACTERS':
-				text += wrap_words(node.data)
+				text += self.wrap_words(node.data)
 				
 			elif event == 'START_ELEMENT':
 				
@@ -111,14 +118,14 @@ class Page_Splitter:
 				self.curpage += text
 				
 			# Fires after </p> and if pagesize is enough
-			if not _nobr and len(self.curpage) >= Page_Splitter.pagesize:
+			if not _nobr and not self.onepage and len(self.curpage) >= Page_Splitter.pagesize:
 				self.endpage()
 		
 		if self.curpage:
 			self.endpage()
 			
 		self.num_pages = len(self.pages)
-		if contents:
+		if contents and not self.onepage:
 		# Make a table of contents
 			table = '<table class="contents">'
 			for c in contents:
@@ -128,7 +135,12 @@ class Page_Splitter:
 			table += "</table>"
 			self.pages[0] = table + self.pages[0]
 		# Make a title for the first page
-		self.pages[0] = "<h1>" + wrap_words(work.title()['eo']) + "</h1>" + self.pages[0]
+		title = '<div class="title"><h1>' + self.wrap_words(work.title()['eo']) + "</h1>"
+		title += '<p class="author">' + work.author.full() + "</p>"
+		if work.translator != None:
+			title += '<p class="translator">Tradukis ' + work.translator.full() + "</p>"
+		title += "</div>"
+		self.pages[0] = title + self.pages[0]
 		
 	def endpage(self):
 		# Are we in the middle of a poem?
@@ -136,7 +148,7 @@ class Page_Splitter:
 			self.curpage += '</blockquote>'
 		# Were there any self.footnotes?
 		if self.footnotes:
-			self.curpage += '<div id="self.footnotes">'
+			self.curpage += '<div id="footnotes">'
 			for i, footnote in enumerate(self.footnotes):
 				self.curpage += '<p><sup>%d</sup>%s</p>' % (i+1, footnote)
 			self.curpage += '</div>'
@@ -144,10 +156,16 @@ class Page_Splitter:
 		self.pages.append(self.curpage)
 		# Clear
 		self.curpage = ""
-		print "Page %d, %d characters" % (len(self.pages) + 1, len(self.pages[-1]))
+		print "Page %d, %d characters" % (len(self.pages), len(self.pages[-1]))
 		
 	def __iter__(self):
-		return enumerate(self.pages)	
+		return enumerate(self.pages)
+	
+	def wrap_words(self, text):
+		if self.wrapwords:
+			return wrap_words(text)
+		else:
+			return text	
 
 def replace_dict(text,d):
 	l1 = d.keys()
