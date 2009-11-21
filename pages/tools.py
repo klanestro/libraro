@@ -24,7 +24,7 @@ def xify(text):
 	return text
 
 class Page_Splitter:
-	version = 63
+	version = 75
 	pagesize = 3500
 	untouched_tags = ['p','em']
 	nobr_elements = ['p','stanza','center','footnote','h2']
@@ -81,6 +81,14 @@ class Page_Splitter:
 					_h2 = True
 					contents.append([len(self.pages)+1,""])
 					text += "<h2>"
+				elif node.nodeName == "img":
+					events.expandNode(node)
+					url = work.dir() + "/img/" + node.getAttribute("name")
+					float = node.getAttribute("float")
+					if float != "":
+						text += '<p><img src="%s" style="float:%s"/></p>' % (url, float)
+					else:
+						text += '<p style="text-align:center;"><img src="%s"/></p>' % url
 					
 				if node.nodeName in Page_Splitter.untouched_tags:
 					text += '<%s>' % node.nodeName
@@ -129,7 +137,7 @@ class Page_Splitter:
 		# Make a table of contents
 			table = '<table class="contents">'
 			for c in contents:
-				table += '<tr><td><a href="%s%d">' % (work.fullurl(), c[0]) 
+				table += '<tr><td><a href="%s/%d">' % (work.fullurl(), c[0]) 
 				table += '%s</a></td><td style="text-align:right">%d' % (c[1], c[0])
 				table += '</td></tr>'
 			table += "</table>"

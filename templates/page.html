@@ -11,12 +11,14 @@
 </div>
 
 {% if not onepage %}
+<div style="clear:both">
 <hr/>
 <p style="text-align:center;font-size:18px;">
 {% ifnotequal prev -1 %}<a href="{{ work.fullurl }}/{{ prev }}/">&#8592;&nbsp;</a>{% endifnotequal %}
 {{ page }}
 {% ifnotequal next -1 %}<a href="{{ work.fullurl }}/{{ next }}/">&nbsp;&#8594;</a>{% endifnotequal %}
 </p>
+</div>
 {% endif %}
 
 {% endblock %}
@@ -41,7 +43,7 @@ Translated by <a href="{{ work.translator.fullurl }}">{{ work.translator.full }}
 
 {% if not onepage %}
 <p>Page {{ page }} of {{ work.num_pages }}. Go to page  <input type="text" id="page_input" maxlength="3" />
-<a href="javascript:gotopage({{ work.num_pages }},'{{ work.fullurl }}')">&#8594;</a></p>
+<a href="javascript:gotopage({{ work.num_pages }},'{{ work.fullurl }}/')">&#8594;</a></p>
 {% endif %}
 
 <p><a href="{{ work.fullurl }}.html">Print version</a></p>

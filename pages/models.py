@@ -95,6 +95,9 @@ class Work(Model):
 	def fullurl(self):
 		return "/read/" + self.author.url + "/" + self.url
 	
+	def dir(self):
+		return "/media/works/%d" % self.id
+	
 	def page(self,number):
 		self.generate()
 		if number > self.num_pages:
