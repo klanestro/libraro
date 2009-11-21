@@ -14,13 +14,13 @@ os.environ["DJANGO_SETTINGS_MODULE"] = "libraro.settings"
 
 def pack():
 	tar = tarfile.open(libraro + "/packed.tar", "w")
-	tar.add("media/works")
-	tar.add("esp.sqlite3")
+	tar.add(libraro + "media/works")
+	tar.add(libraro + "esp.sqlite3")
 	tar.close()
 
 def unpack():
 	tar = tarfile.open(libraro + "/packed.tar", "r")
-	tar.extractall()
+	tar.extractall(libraro)
 	
 def rebuild():
 	from pages.models import Work
