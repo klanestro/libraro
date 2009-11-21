@@ -9,7 +9,7 @@ def wrap_words(text):
 	prog = re.compile(r"([^<>\w])([\w']+)([^<>\w])", re.UNICODE)
 	def foo(m):
 		return "%s<v>%s</v>%s" % (m.group(1), m.group(2), m.group(3))
-	return prog.sub(foo, " "+text+" ")
+	return prog.sub(foo, prog.sub(foo, " "+text+" "))
 
 def urlify(text):
 	url = re.compile(r'[^ \ \w]', re.UNICODE).sub('',text.lower())
@@ -24,8 +24,8 @@ def xify(text):
 	return text
 
 class Page_Splitter:
-	version = 36
-	pagesize = 2000
+	version = 40
+	pagesize = 3500
 	untouched_tags = ['p','em']
 	nobr_elements = ['p','stanza','center','footnote','h2']
 	def __init__(self, work):
@@ -49,7 +49,7 @@ class Page_Splitter:
 				text += '<blockquote class="verse">'
 			
 			if event == 'CHARACTERS':
-				text += wrap_words(wrap_words(node.data))
+				text += wrap_words(node.data)
 				
 			elif event == 'START_ELEMENT':
 				
@@ -144,7 +144,7 @@ class Page_Splitter:
 		self.pages.append(self.curpage)
 		# Clear
 		self.curpage = ""
-		print "Page %d" % (len(self.pages) + 1)
+		print "Page %d, %d characters" % (len(self.pages) + 1, len(self.pages[-1]))
 		
 	def __iter__(self):
 		return enumerate(self.pages)	
