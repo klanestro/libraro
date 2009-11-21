@@ -101,7 +101,7 @@ class Work(Model):
 			raise Http404
 		p = self.pages.all().get(number=number)
 		return p.content
-
+	
 	def lang(self):
 		l = {
 		'ru':'Russian',
@@ -140,6 +140,7 @@ class Work(Model):
 		# No need to generate
 		if self.splitter_version == Page_Splitter.version:
 			return
+		print "%d: %s" % (self.id, self.title()['eo'])
 		# Delete all old pages
 		self.pages.all().delete()
 
