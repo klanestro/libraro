@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import sys
+from settings import ROOT_FOLDER
 
-roots = set(open('/home/boroninh/libraro/roots.txt','r').read().decode('utf-8').strip().split("\n"))
+roots = set(open(ROOT_FOLDER+'roots.txt','r').read().decode('utf-8').strip().split("\n"))
 prefixes=[u"ali",u"bo",u"dis",u"ek",u"eks",u"fi",u"ge",u"i",u"ki",u"mal",u"neni",u"pra",u"re",u"ti",u"ĉef",u"ĉi",u"ne"]
 suffixes=set([u"aĵ",u"ar",u"ant",u"ad",u"at",u"aĉ",u"ant",u"an",u"ar",u"ec",u"eg",u"estr",u"et",u"ej",u"ebl",u"em",u"er",u"ent",u"el",u"end",u"ig",u"iĝ",u"ing",u"int",u"ist",u"in",u"iĉ",u"ind",u"il",u"id",u"ism",u"it",u"int",u"obl",u"op",u"ot",u"on",u"ont",u"uj",u"ul",u"um",u"ut",u"unt",u"ĉj"])
 
