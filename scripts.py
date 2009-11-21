@@ -13,13 +13,13 @@ sys.path.append(os.path.split(libraro)[0])
 os.environ["DJANGO_SETTINGS_MODULE"] = "libraro.settings"
 
 def pack():
-	tar = tarfile.open("packed.tar", "w")
+	tar = tarfile.open(libraro + "/packed.tar", "w")
 	tar.add("media/works")
 	tar.add("esp.sqlite3")
 	tar.close()
 
 def unpack():
-	tar = tarfile.open("packed.tar", "r")
+	tar = tarfile.open(libraro + "/packed.tar", "r")
 	tar.extractall()
 	
 def rebuild():
