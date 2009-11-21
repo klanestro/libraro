@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+from settings import ROOT_FOLDER
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -22,6 +23,6 @@ urlpatterns = patterns('',
 	(r'^read/(?P<author>\w*)/(?P<title>\w*).html$', 'libraro.pages.views.htmlpage'),
 	(r'^read/(?P<author>\w*)/(?P<title>\w*)/$', 'libraro.pages.views.page'),
 	(r'^read/(?P<author>\w*)/(?P<title>\w*)/(?P<page>\w*)/$', 'libraro.pages.views.page'),
-	(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/home/boroninh/libraro/media/'}),
+	(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': ROOT_FOLDER+'/media/'}),
     (r'^admin/(.*)', admin.site.root),
 )
