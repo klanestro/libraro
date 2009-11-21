@@ -20,7 +20,7 @@ def setup():
 	else:
 		print 'Done. Run "python manage.py runserver" to test'
 
-def confirm(prompt=None, resp=False):
+def confirm(prompt=None, resp=True):
 	if prompt is None:
 		prompt = 'Confirm'
 
