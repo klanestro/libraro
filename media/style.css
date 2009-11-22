@@ -185,3 +185,23 @@ span.small > a{
 v{
 	cursor: help;
 }
+#IE{
+	visibility:hidden;
+	position:absolute;
+	left:0px;
+	top:0px;
+	height:30px;
+	background-color:#7A2223;
+	width:100%;
+	z-index:99;
+}
+#IE p{
+	line-height:30px;
+	padding:0px;
+	margin:0px;
+	text-indent:10px;
+	color:#A7A7A7;
+}
+#IE p a{
+	color:#63C9E1;
+}

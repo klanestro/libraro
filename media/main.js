@@ -33,8 +33,16 @@ vortaro.close = function(){
 	},500);
 }
 vortaro.timeout = setTimeout("",1);
-vortaro.ready = false;
 vortaro.word = "";
+vortaro.ready = function(){
+	if(navigator.appName=="Microsoft Internet Explorer"){
+		$("#IE").css("visibility", "visible");
+	}
+	$("#vortaro").mouseenter(function(){
+		clearTimeout(vortaro.timeout);
+	});
+	$("#vortaro").mouseleave(vortaro.close);	
+}
 vortaro.register = function(el){
 	el = $(el);
 	el.click(vortaro.findword);
@@ -43,13 +51,6 @@ vortaro.register = function(el){
 		$("#vortaro").stop().animate({bottom:"0px"},"fast");
 	});
 	el.mouseleave(vortaro.close);
-	if(!vortaro.ready){
-		$("#vortaro").mouseenter(function(){
-			clearTimeout(vortaro.timeout);
-		});
-		$("#vortaro").mouseleave(vortaro.close);
-		vortaro.ready = true;
-	}
 	$("v").mouseenter(function(){
 		vortaro.word = $(this).html();
 		$(this).css("background-color","#FFFD9E");
@@ -60,4 +61,4 @@ vortaro.register = function(el){
 	});
 }
 
-$(document).ready(function(){vortaro.register(".esp");})
+$(document).ready(function(){vortaro.ready();vortaro.register(".esp");})
