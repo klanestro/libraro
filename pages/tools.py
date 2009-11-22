@@ -90,9 +90,9 @@ class Page_Splitter:
 					url = work.dir() + "/img/" + node.getAttribute("name")
 					float = node.getAttribute("float")
 					if float != "":
-						text += '<p><img src="%s" style="float:%s"/></p>' % (url, float)
+						text += '<p><img src="%s" style="float:%s" alt=""/></p>' % (url, float)
 					else:
-						text += '<p style="text-align:center;"><img src="%s"/></p>' % url
+						text += '<p style="text-align:center;"><img src="%s" alt=""/></p>' % url
 					
 				if node.nodeName in Page_Splitter.untouched_tags:
 					text += '<%s>' % node.nodeName
