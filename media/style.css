@@ -82,11 +82,11 @@ img{
 
 #content{
 	float:left;
-	width:445px;
+	width:485px;
 	background-color:#1D0006;
 	min-height:500px;
-	padding-left:50px;
-	padding-right:50px;
+	padding-left:30px;
+	padding-right:30px;
 	padding-bottom:150px;
 	padding-top:50px;
 	background-color:white;	

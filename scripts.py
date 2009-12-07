@@ -14,6 +14,7 @@ sys.path.append(os.path.split(libraro)[0])
 os.environ["DJANGO_SETTINGS_MODULE"] = "libraro.settings"
 
 from libraro.settings import MEDIA_ROOT
+from pages.models import Work
 
 def pack():
 	tar = tarfile.open(libraro + "/packed.tar", "w")
@@ -27,7 +28,33 @@ def unpack():
 	
 def rebuild(work):
 	work.splitter_version = 0
-	work.generate()	
+	work.generate()
+
+def clean(work):
+	from pages.tools import MyParser
+	from convert import converter
+	"""
+	filename = "%sworks/%d/work.xml" % (MEDIA_ROOT, work.id)
+	clean = unescape(open(filename, "r").read().decode("utf-8"))
+	clean = clean.replace("<i>", "<em>")
+	clean = clean.replace("</i>", "</em>")
+	clean = clean.replace("<b>", "<strong>")
+	clean = clean.replace("</b>", "</strong>")
+	clean = clean.replace("<BR>", "<br/>")
+	clean = clean.replace("<HR>", "<hr/>")
+	open(filename, "w").write(clean.encode("utf-8"))
+	print "Cleaned XML %s" % filename
+	conv = converter(
+		xmlf = work.workdir() + "/work.xml",
+		pyxf = work.workdir() + "/raw.txt"
+	)
+	conv.xml2pyx()
+	"""
+	print "Validating..."
+	parser = MyParser()
+	root = parser.parse(open(work.workdir()+"/raw.txt","r"))
+	parser.output(work.workdir()+"/raw.txt")
+	print "Valid or fixed. Try rebuilding"
 
 helpstring = """
 The following commands are implemented:
@@ -47,12 +74,14 @@ The following commands are implemented:
 	files, then rebuilds everything. If id is omitted, it
 	does this for every work.
 
-./scripts.py clean
-	Performs standard cleaning operations on each raw XML file
-	such as removing all unnecessary XML and HTML entites.
+./scripts.py clean [id]
+	For the work with the given id, it performs standard cleaning 
+	operations on the XML file, then converts it to PYX, then validates
+	it. If id is omitted, it does this for every work.
 """
 
 def unescape(text): # http://stackoverflow.com/users/62262/karlcow
+	import htmlentitydefs
 	"""Removes HTML or XML character references 
 	and entities from a text string.
 	@param text The HTML (or XML) source text.
@@ -103,11 +132,10 @@ if __name__ == "__main__":
 	elif sys.argv[1] == "unpack":
 		unpack()
 	elif sys.argv[1] == "rebuild":
-		from pages.models import Work
 		if len(sys.argv) > 2:
 			try:
 				rebuild(Work.objects.get(id=int(sys.argv[2])))
-			except:
+			except Work.DoesNotExist:
 				print sys.argv[2] + " not found"
 		else:
 			for work in Work.objects.all():
@@ -115,9 +143,14 @@ if __name__ == "__main__":
 	elif sys.argv[1] == "help":
 		print helpstring
 	elif sys.argv[1] == "clean":
-		from pages.models import Work
-		for work in Work.objects.all():
-			filename = "%sworks/%d/work.xml" % (MEDIA_ROOT, work.id)
-			clean = unescape(open(filename, "r").read().decode("utf-8"))
-			open(filename, "w").write(clean.encode("utf-8"))
-			print "Cleaned %s" % filename
+		if len(sys.argv) > 2:
+			try:
+				clean(Work.objects.get(id=int(sys.argv[2])))
+			except Work.DoesNotExist:
+				print sys.argv[2] + " not found"
+		else:
+			for work in Work.objects.all():
+				clean(work)
+
+			
+

@@ -134,16 +134,14 @@ class Work(Model):
 	
 	def __unicode__(self):
 		return self.fileas
-		
-	def link(self):
-		return '<a href="#">Link to first page</a>'
-	link.allow_tags = True
 	
 	def generate(self):
+		
 		# No need to generate
 		if self.splitter_version == Page_Splitter.version:
 			return
 		print "%d: %s" % (self.id, self.title()['eo'])
+		
 		# Delete all old pages
 		self.pages.all().delete()
 
@@ -160,9 +158,10 @@ class Work(Model):
 		
 		# Make new work.html
 		new = open((media+"works/%d/work.html" % self.id), 'w')
-		splitter.run(onepage=True,wrapwords=False)
+		splitter.run(one_page=True,wrap_words=False)
 		new.write(splitter.pages[0].encode('utf-8'))
 		new.close()
+		
 		
 	def save(self, force_insert=False, force_update=False):	
 		title = self.title()['eo']
@@ -179,7 +178,7 @@ class Work(Model):
 		
 		super(Work, self).save(force_insert, force_update)
 		
-		workdir = media+"works/%d" % self.id
+		workdir = self.workdir()
 		if not os.path.exists(workdir):
 			os.mkdir(workdir)
 		
@@ -190,13 +189,18 @@ class Work(Model):
 			self.fulltext = ""
 			self.generate()
 	
+	def workdir(self):
+		return media+"works/%d" % self.id
+	
 	def text(self, format, as_file=False):
-		workdir = media+"works/%d/" % self.id
+		workdir = self.workdir()
 		if format == "xml":
-			f = "work.xml"
+			f = "/work.xml"
 		elif format == "html":
 			self.generate()
-			f = "work.html"
+			f = "/work.html"
+		elif format == "pyx":
+			f = "/raw.txt"
 		if as_file:
 			return open(workdir + f, 'r')
 		else:

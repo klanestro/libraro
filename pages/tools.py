@@ -4,6 +4,8 @@ import re
 from xml.etree import ElementTree
 import sys
 from xml.dom import pulldom
+import pickle
+from libraro.convert import Parser
 
 def wrap_words(text):
 	prog = re.compile(r"([^<>\w])([\w']+)([^<>\w])", re.UNICODE)
@@ -23,166 +25,178 @@ def xify(text):
 		text = text.replace(letter, rep[num]+'x')
 	return text
 
+class MyParser(Parser):
+	def fix(self,node):
+		pass
+	def validate(self,node):
+		if node.text:
+			pass
+		elif node.tag.upper() == node.tag:
+			node.tag = node.tag.lower()
+		if node.tag == "poem":
+			for child in node:
+				if child.tag == "p":
+					child.tag = "stanza"
+				elif child.tag == "center":
+					child.tag = "title"
+				if child.tag not in ["stanza", "title"]:
+					raise Exception("Tag not allowed inside poem on line %d" % child.line)
+		elif node.tag == "i": node.tag = "em"
+		elif node.tag == "b": node.tag = "strong"
+
+
+INLINE_TAGS = ["strong","em","br"]
+SELF_CLOSING_TAGS = ["br","hr"]
+
 class Page_Splitter:
 	version = 76
-	pagesize = 3500
-	untouched_tags = ['p','em']
-	nobr_elements = ['p','stanza','center','footnote','h2','c1','c2']
 	
 	def __init__(self, work):
 		self.work = work
-		
-	def run(self, onepage=False, wrapwords=True):
-		work = self.work
-		self.wrapwords = wrapwords
-		self.onepage = onepage
-		input = work.text("xml",True)
-		events = pulldom.parse(input)
+
+	def run(self, one_page=False, wrap_words=True):
+		self.page_size = 3500
+		self.wrapwords = wrap_words
+		self.one_page = one_page
 		self.pages = []
 		self.curpage = ""
 		self.footnotes = []
-		contents = []
-		self._poem = False
+		self.contents = []
 		_nobr = False
-		_footnote = False
 		_h2 = False
 		
-		for event, node in events:
-			
-			text = ""
-			# If this is a new page and a poem was
-			# interrupted on the last page
-			if self.curpage == "" and self._poem:
-				text += '<blockquote class="verse">'
-			
-			if event == 'CHARACTERS':
-				text += self.wrap_words(node.data)
-				
-			elif event == 'START_ELEMENT':
-				
-				if node.nodeName == "poem":
-					self._poem = True
-					text += '<blockquote class="verse">'
-				elif node.nodeName == "stanza":
-					text += '<p>'
-				elif node.nodeName == "center":
-					text += '<p class="center">'
-				elif node.nodeName == "br":
-					text += "<br/>"
-				elif node.nodeName == "hr":
-					text += '<p class="hr">*&nbsp;*&nbsp;*</p>'
-				elif node.nodeName == "footnote":
-					_footnote = True
-					# The text will be added to the *last* footnote
-					# so let's create a new one
-					self.footnotes.append("")
-					text += '<sup>%d</sup>' % len(self.footnotes)
-				elif node.nodeName == "h2":
-					_h2 = True
-					contents.append([len(self.pages)+1,""])
-					text += "<h2>"
-				elif node.nodeName == "c1":
-					text += "<h2>"
-				elif node.nodeName == "c2":
-					text += "<h3>"
-				elif node.nodeName == "img":
-					events.expandNode(node)
-					url = work.dir() + "/img/" + node.getAttribute("name")
-					float = node.getAttribute("float")
-					if float != "":
-						text += '<p><img src="%s" style="float:%s" alt=""/></p>' % (url, float)
-					else:
-						text += '<p style="text-align:center;"><img src="%s" alt=""/></p>' % url
-					
-				if node.nodeName in Page_Splitter.untouched_tags:
-					text += '<%s>' % node.nodeName
-					
-				if node.nodeName in Page_Splitter.nobr_elements:
-					_nobr = True
-					
-			elif event == 'END_ELEMENT':
-				
-				if node.nodeName == "poem":
-					self._poem = False
-					text += '</blockquote>'
-				elif node.nodeName == "stanza":
-					text += '</p>'
-				elif node.nodeName == "center":
-					text += '</p>'
-				elif node.nodeName == "footnote":
-					_footnote = False
-				elif node.nodeName == "h2":
-					_h2 = False
-					text += "</h2>"
-				elif node.nodeName == "c1":
-					text += "</h2>"
-				elif node.nodeName == "c2":
-					text += "</h3>"
-					
-				if node.nodeName in Page_Splitter.untouched_tags:
-					text += '</%s>' % node.nodeName 
-				
-				if node.nodeName in Page_Splitter.nobr_elements:
-					_nobr = False
-			
-			if _footnote and node.nodeName != "footnote":
-				self.footnotes[-1] += text	
-			elif _h2  and node.nodeName != "h2":
-				contents[-1][1] += text
-				self.curpage += text
-			else:
-				self.curpage += text
-				
-			# Fires after </p> and if pagesize is enough
-			if not _nobr and not self.onepage and len(self.curpage) >= Page_Splitter.pagesize:
-				self.endpage()
+		parser = MyParser()
+		root = parser.parse(open(self.work.workdir()+"/raw.txt","r"))
 		
-		if self.curpage.strip():
-			self.endpage()
-			
+		self.section(root,root_section=True)
+		self.end_page()
+		
 		self.num_pages = len(self.pages)
-		if contents and not self.onepage and self.num_pages >= 3:
+		if not self.one_page and self.contents and self.num_pages >= 3:
 		# Make a table of contents
 			table = '<table class="contents">'
-			for c in contents:
-				table += '<tr><td><a href="%s/%d">' % (work.fullurl(), c[0]) 
+			for c in self.contents:
+				table += '<tr><td><a href="%s/%d">' % (self.work.fullurl(), c[0]) 
 				table += '%s</a></td><td style="text-align:right">%d' % (c[1], c[0])
 				table += '</td></tr>'
 			table += "</table>"
 			self.pages[0] = table + self.pages[0]
 		# Make a title for the first page
-		title = '<div class="title"><h1>' + self.wrap_words(work.title()['eo']) + "</h1>"
-		title += '<p class="author">' + work.author.full() + "</p>"
-		if work.translator != None:
-			title += '<p class="translator">Tradukis ' + work.translator.full() + "</p>"
+		title = '<div class="title"><h1>' + self.wrap_words(self.work.title()['eo']) + "</h1>"
+		title += '<p class="author">' + self.work.author.full() + "</p>"
+		if self.work.translator != None:
+			title += '<p class="translator">Tradukis ' + self.work.translator.full() + "</p>"
 		title += "</div>"
 		self.pages[0] = title + self.pages[0]
-		
-	def endpage(self):
-		# Are we in the middle of a poem?
-		if self._poem:
-			self.curpage += '</blockquote>'
-		# Were there any self.footnotes?
-		if self.footnotes:
-			self.curpage += '<div id="footnotes">'
-			for i, footnote in enumerate(self.footnotes):
-				self.curpage += '<p><sup>%d</sup>%s</p>' % (i+1, footnote)
-			self.curpage += '</div>'
-		# Append the page
-		self.pages.append(self.curpage)
-		# Clear
-		self.curpage = ""
-		print "Page %d, %d characters" % (len(self.pages), len(self.pages[-1]))
-		
-	def __iter__(self):
-		return enumerate(self.pages)
+
 	
+	def section(self,section,root_section=False):
+		if not root_section:
+			title = self.inline(section["title"])
+			# Add to table of contents
+			self.contents.append((len(self.pages)+1,title))
+			self.append("<h2>%s</h2>" % title)
+			if section["title2"]:
+				self.append("<h4>%s</h4>" % self.inline(section["title2"]))
+		for preface in section["prefaces"]:
+			if preface["title"]:
+				self.append("<h3>%s</h3>" % self.inline(preface["title"]))
+			if preface["title2"]:
+				self.append("<h4>%s</h4>" % self.inline(preface["title2"]))
+			self.paragraph(preface)
+			if preface["signed"]:
+				self.append('<p class="signed">%s</p>' % self.inline(preface["signed"]))
+		self.paragraph(section)
+	
+	def append(self,text):
+		self.curpage += text
+		return len(self.curpage) > self.page_size
+	
+	def inline(self,node):
+		ret = ""
+		for child in node:
+			if child.text:
+				ret += self.wrap_words(child.text)
+			elif child.tag in INLINE_TAGS:
+				ret += self.wrap_in_tag(child.tag, self.inline(child))
+			elif child.tag == "footnote":
+				self.footnotes.append(self.inline(child))
+				ret += "<sup>%d</sup>" % len(self.footnotes)
+		return ret
+	
+	def paragraph(self,node):
+		# At least one paragraph uner a title
+		at_least_one = False
+		for child in node:
+			if child.tag == "section":
+				self.section(child)
+			elif child.tag == "p":
+				self.append("<p>%s</p>" % self.inline(child))
+			elif child.tag == "center":
+				self.append('<p class="center">%s</p>' % self.inline(child))
+			elif child.tag == "img":
+				url = self.work.dir() + "/img/" + child["name"]
+				if child["float"]:
+					text = '<p><img src="%s" style="float:%s" alt=""/></p>' % (url, child["float"])
+				else:
+					caption = ""
+					if child["caption"]:
+							caption = "<br/>" + self.inline(child["caption"])
+					text = '<p class="image"><img src="%s" alt=""/>%s</p>' % (url, caption)
+				self.append(text)
+			elif child.tag == "poem":
+				self.poem(child)
+			elif child.tag == "hr":
+				self.append('<p class="hr">*&nbsp;*&nbsp;*</p>')
+				
+			if child.tag in ["p","center","img"] and not self.one_page and len(self.curpage) > self.page_size:
+				self.end_page()
+	
+	def poem(self,node):
+		self.append('<blockquote class="verse">')
+		for child in node:
+			if child.tag == "stanza":
+				self.append('<p>%s</p>' % self.inline(child))
+				# Transfer to next page if space is running out
+				if not self.one_page and len(self.curpage) > self.page_size:
+					self.append('</blockquote>')
+					self.end_page()
+					self.append('<blockquote class="verse">')
+			elif child.tag == "title":
+				self.append('<p class="center">%s</p>' % self.inline(child))
+		self.append('</blockquote>')
+		
+	def end_page(self):
+		if self.curpage.strip():
+			# Add footnotes
+			if self.footnotes:
+				self.curpage += '<div id="footnotes">'
+				for i, footnote in enumerate(self.footnotes):
+					self.curpage += '<p><sup>%d</sup> %s</p>' % (i+1, footnote)
+				self.curpage += '</div>'
+			# Append the page
+			self.pages.append(self.curpage)
+			# Clear current page and footnotes
+			self.curpage = ""
+			self.footnotes = []
+			print "Page %d, %d characters" % (len(self.pages), len(self.pages[-1]))
+	
+	def wrap_in_tag(self, tag, content):
+		#print tag
+		if tag in SELF_CLOSING_TAGS:
+			return "<" + tag + "/>"
+		else:
+			return "<%s>%s</%s>" % (tag, content, tag)
+		
 	def wrap_words(self, text):
 		if self.wrapwords:
 			return wrap_words(text)
 		else:
-			return text	
-
+			return text
+		
+	def __iter__(self):
+		return enumerate(self.pages)
+	
 def replace_dict(text,d):
 	l1 = d.keys()
 	l2 = d.values()
