@@ -150,3 +150,9 @@ def page(request, author, title, page=1):
 def latest():
 	#filter(published=True)
 	return Work.objects.filter(published=True).order_by('-when_published')[:7]
+
+def robots(request):
+	text = """User-agent: *
+Allow: /
+Disallow: /read/*.html$ """
+	return HttpResponse(text, mimetype="text/plain")
