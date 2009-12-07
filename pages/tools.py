@@ -92,10 +92,10 @@ class Page_Splitter:
 	
 	def section(self,section,root_section=False):
 		if not root_section:
-			title = self.inline(section["title"])
+			title = self.inline(section["title"], True)
 			# Add to table of contents
 			self.contents.append((len(self.pages)+1,title))
-			self.append("<h2>%s</h2>" % title)
+			self.append("<h2>%s</h2>" % self.inline(section["title"]))
 			if section["title2"]:
 				self.append("<h4>%s</h4>" % self.inline(section["title2"]))
 		for preface in section["prefaces"]:
@@ -112,11 +112,14 @@ class Page_Splitter:
 		self.curpage += text
 		return len(self.curpage) > self.page_size
 	
-	def inline(self,node):
+	def inline(self,node,no_wrap=False):
 		ret = ""
 		for child in node:
 			if child.text:
-				ret += self.wrap_words(child.text)
+				if no_wrap:
+					ret += child.text
+				else:
+					ret += self.wrap_words(child.text)
 			elif child.tag in INLINE_TAGS:
 				ret += self.wrap_in_tag(child.tag, self.inline(child))
 			elif child.tag == "footnote":
