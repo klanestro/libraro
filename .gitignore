@@ -1,5 +1,5 @@
 *~
 *.pyc
 local_settings.py
-esp.sqlite3
+libraro.sqlite
 media/works
