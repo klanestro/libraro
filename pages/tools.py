@@ -55,7 +55,7 @@ class Page_Splitter:
 		self.work = work
 
 	def run(self, one_page=False, wrap_words=True):
-		self.page_size = 3500
+		self.page_size = 4500
 		self.wrapwords = wrap_words
 		self.one_page = one_page
 		self.pages = []
