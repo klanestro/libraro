@@ -51,7 +51,7 @@ class Person(Model):
 	born = IntegerField(blank=True, null=True)
 	died = IntegerField(blank=True, null=True)
 	def fullurl(self):
-		return "/read/" + self.url
+		return "/read/" + self.url + "/"
 	def sex(self, m, f):
 		if self.gender == "M": return m
 		else: return f
@@ -93,7 +93,7 @@ class Work(Model):
 	splitter_version = IntegerField(editable=False, null=True, default=0)
 	
 	def fullurl(self):
-		return "/read/" + self.author.url + "/" + self.url
+		return self.author.fullurl() + self.url + "/"
 	
 	def dir(self):
 		return "/media/works/%d" % self.id

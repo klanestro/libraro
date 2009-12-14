@@ -14,9 +14,9 @@
 <div style="clear:both">
 <hr/>
 <p style="text-align:center;font-size:18px;">
-{% ifnotequal prev -1 %}<a href="{{ work.fullurl }}/{{ prev }}/">&#8592;&nbsp;</a>{% endifnotequal %}
+{% ifnotequal prev -1 %}<a href="{{ work.fullurl }}{{ prev }}/">&#8592;&nbsp;</a>{% endifnotequal %}
 {{ page }}
-{% ifnotequal next -1 %}<a href="{{ work.fullurl }}/{{ next }}/">&nbsp;&#8594;</a>{% endifnotequal %}
+{% ifnotequal next -1 %}<a href="{{ work.fullurl }}{{ next }}/">&nbsp;&#8594;</a>{% endifnotequal %}
 </p>
 </div>
 {% endif %}
@@ -46,7 +46,7 @@ Translated by <a href="{{ work.translator.fullurl }}">{{ work.translator.full }}
 <a href="javascript:gotopage({{ work.num_pages }},'{{ work.fullurl }}/')">&#8594;</a></p>
 {% endif %}
 
-<p><a href="{{ work.fullurl }}.html">Print version</a></p>
+<p><a href="{{ work.fullurl }}print.html">Print version</a></p>
 <hr/>
 
 {% if license %}

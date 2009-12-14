@@ -76,7 +76,7 @@ class Page_Splitter:
 		# Make a table of contents
 			table = '<table class="contents">'
 			for c in self.contents:
-				table += '<tr><td><a href="%s/%d">' % (self.work.fullurl(), c[0]) 
+				table += '<tr><td><a href="%s%d/">' % (self.work.fullurl(), c[0]) 
 				table += '%s</a></td><td style="text-align:right">%d' % (c[1], c[0])
 				table += '</td></tr>'
 			table += "</table>"
