@@ -1,3 +1,13 @@
-Run @python manage.py libraro_unpack@ to unpack database and
-text files. There are a few more custom commands, check them
-out with @python manage.py help@.
+The database and text files are ignored by git. If you want to 
+push an updated version, run 
+
+  python manage.py libraro_pack
+
+to overwrite the "packed.tar" archive. After pulling an updated 
+archive (or after cloning), run
+
+  python manage.py libraro_unpack
+
+There are a few more custom commands, check them out with
+
+  python manage.py help
