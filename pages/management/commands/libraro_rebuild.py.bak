@@ -5,11 +5,11 @@ from libraro.pages.models import Work
 def rebuild(work):
     work.splitter_version = 0
     work.generate()
-
+    
 class Command(BaseCommand):
     help = """
     For the work with the given id, it deletes the cached
-    pages and all converted files, leaving only the raw XML
+    pages and all converted files, leaving only the raw XML 
     files, then rebuilds everything. If id is omitted, it
     does this for every work."""
     def handle(self, *args, **options):

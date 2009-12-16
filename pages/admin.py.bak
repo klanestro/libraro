@@ -2,8 +2,8 @@ from libraro.pages.models import *
 from django.contrib import admin
 
 def resave(modeladmin, request, queryset):
-    for a in queryset:
-        a.save()
+	for a in queryset:
+		a.save()
 resave.short_description = "Resave"
 
 class WorkAdmin(admin.ModelAdmin):

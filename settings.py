@@ -5,7 +5,7 @@ TEMPLATE_DEBUG = DEBUG
 PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
 
 try:
-	from libraro.local_settings import *
+    from libraro.local_settings import *
 except ImportError: pass
 
 ADMINS = (
@@ -82,8 +82,6 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-	'libraro.pages',
-	'django.contrib.admin',
+        'libraro.pages',
+        'django.contrib.admin',
 )
-
-
