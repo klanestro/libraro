@@ -20,7 +20,7 @@ vortaro.findword = function(){
 	}
 	$("#load").css("visibility", "visible");
 	//rand = Math.floor(Math.random()*1000001)
-	$.getJSON('http://vortaro.co.cc/ajax/epo/eng/'+vortaro.word+'/?callback=?', function(data){
+	$.getJSON('http://vortaro.us.to/ajax/epo/eng/'+vortaro.word+'/?callback=?', function(data){
 		$("#load").css("visibility", "hidden");		
 		$("#vortaro-definition").html(data.text);
 	});
