@@ -2,7 +2,6 @@ html{height:100%}
 body{
 	font-size:14px;
 	line-height:20px;
-	background-color:white;
 	font-family: Arial, Helvetica, Sans;
 	color:#373737;
 	margin:0px;
@@ -20,31 +19,14 @@ img{
 	border:none;
 }
 #center{
-	position:absolute;
-	margin-top:115px;
-	left:50%;
+	margin:auto;
 	width:900px;
-	margin-left:-450px;
-	/*background-color:#C13553;*/
-}
-
-#header{
-	position:absolute;
-	left:50%;
-	width:900px;
-	margin-left:-450px;
 }
 
 #footer{
-	width:350px;
-	position:absolute;
-	bottom:5px;
-	right:0px;
-}
-#created_by{
-	margin-top:5px;
+	margin-top:-25px;
+	margin-left:555px;
 	font-size:12px;
-	padding-left:5px;
 }
 
 #side_bar{
@@ -126,9 +108,8 @@ a:hover{
 }
 
 #menu_bar{
-	margin-top:90px;
 	position:relative;
-	height:45px;
+	height:25px;
 }
 div.menu_item{
 	font-family:Helvetica, Arial, Sans;
