@@ -35,14 +35,13 @@ vortaro.close = function(){
 vortaro.timeout = setTimeout("",1);
 vortaro.word = "";
 vortaro.ready = function(){
-	if(navigator.appName=="Microsoft Internet Explorer"){
-		$("#IE").css("visibility", "visible");
-	}
 	$("#vortaro").mouseenter(function(){
 		clearTimeout(vortaro.timeout);
 	});
 	$("#vortaro").mouseleave(vortaro.close);	
 }
+// vortaro.register takes a jquery selector and "registers" all of its elements to be
+// dictionary clickable.
 vortaro.register = function(el){
 	el = $(el);
 	el.click(vortaro.findword);
