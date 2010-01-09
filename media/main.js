@@ -32,6 +32,8 @@ vortaro.close = function(){
 		{bottom:"-"+($("#vortaro").height()+1)+"px"},"fast");
 	},500);
 }
+
+
 vortaro.timeout = setTimeout("",1);
 vortaro.word = "";
 vortaro.ready = function(){
