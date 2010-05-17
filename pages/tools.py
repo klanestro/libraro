@@ -10,7 +10,7 @@ from libraro.convert import Parser
 def wrap_words(text):
     prog = re.compile(r"([^<>\w])([\w']+)([^<>\w])", re.UNICODE)
     def foo(m):
-        return "%s<v>%s</v>%s" % (m.group(1), m.group(2), m.group(3))
+        return "%s<i>%s</i>%s" % (m.group(1), m.group(2), m.group(3))
     return prog.sub(foo, prog.sub(foo, " "+text+" "))[1:-1]
 
 def urlify(text):
