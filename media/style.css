@@ -43,7 +43,9 @@ img{
 }
 
 #side_bar ul{
-	padding-left:20px;
+	padding-left:0px;
+    margin-left:20px;
+    text-align: left;
 }
 
 #side_bar h1{
@@ -163,11 +165,8 @@ span.small > a{
 #vortaro-definition{
 	padding-left:3px;
 }
-v{
-	cursor: help;
-}
 #IE{
-	visibility:hidden;
+	visibility:visible;
 	position:absolute;
 	left:0px;
 	top:0px;
@@ -188,5 +187,6 @@ v{
 }
 
 .esp i{
+    cursor: help;
     font-style: normal;
 }
