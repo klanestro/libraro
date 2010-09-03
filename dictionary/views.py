@@ -159,19 +159,14 @@ def findword(type, body, endlist=None):
         return False
 
 def look(w):
-    result = Definition.objects.filter(eo__contains=w)
-    if result:
-        return [w, result[0].en]
-    else:
+    result = Definition.objects.filter(eo=w)
+    if not result:
+        result = Definition.objects.filter(eo__contains=w)
+    if not result:
         return None
-    """
-    import sqlite3
-    conn = sqlite3.connect(PROJECT_ROOT+'/dictionary/words.sqlite')
-    cursor = conn.cursor()
-    cursor.execute("select * from words where eo like ?", (w,))
-    result = cursor.fetchone()
-    conn.close()
-    """
+    result = sorted(result, key=lambda x: len(x.eo))
+
+    return [w, result[0].en]
 
 def starts_with(word, keys):
     """
