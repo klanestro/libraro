@@ -20,7 +20,7 @@ vortaro.findword = function(){
 	}
 	$("#load").css("visibility", "visible");
 	//rand = Math.floor(Math.random()*1000001)
-	$.getJSON('http://vortaro.us.to/ajax/epo/eng/'+vortaro.word+'/?callback=?', function(data){
+	$.getJSON('/dictionary/'+vortaro.word+'/?callback=?', function(data){
 		$("#load").css("visibility", "hidden");		
 		$("#vortaro-definition").html(data.text);
 	});
@@ -44,19 +44,19 @@ vortaro.ready = function(){
 }
 // vortaro.register takes a jquery selector and "registers" all of its elements to be
 // dictionary clickable.
-vortaro.register = function(el){
-	el = $(el);
+vortaro.register = function(selector){
+	el = $(selector);
 	el.click(vortaro.findword);
 	el.mouseenter(function(){
 		clearTimeout(vortaro.timeout);
 		$("#vortaro").stop().animate({bottom:"0px"},"fast");
 	});
 	el.mouseleave(vortaro.close);
-	$("v").mouseenter(function(){
+	$(selector + " i").mouseenter(function(){
 		vortaro.word = $(this).html();
 		$(this).css("background-color","#FFFD9E");
 	});
-	$("v").mouseleave(function(){
+	$(selector + " i").mouseleave(function(){
 		vortaro.word = ""
 		$(this).css("background-color","white");
 	});
